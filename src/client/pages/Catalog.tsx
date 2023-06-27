@@ -9,32 +9,30 @@ import { ApplicationState, productsLoad } from '../store';
 const bem = cn('Catalog');
 
 export const Catalog: React.FC = () => {
-    const dispatch = useDispatch();
-    const products = useSelector((s: ApplicationState) => s.products);
+  const dispatch = useDispatch();
+  const products = useSelector((s: ApplicationState) => s.products);
 
-    useEffect(() => {
-        dispatch(productsLoad())
-    }, []);
+  useEffect(() => {
+    dispatch(productsLoad());
+  }, []);
 
-    const items: React.ReactNode = products ?
-        products.map(p => (
-            <div key={p.id} data-testid={p.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                <ProductItem product={p} />
-            </div>
-        )) :
-        'LOADING';
-
-    return (
-        <div className={bem()}>
-            <Helmet title="Catalog" />
-            <div className="row">
-                <div className="col">
-                    <h1>Catalog</h1>
-                </div>
-            </div>
-            <div className="row">
-                {items}
-            </div>
+  const items: React.ReactNode = products
+    ? products.map((p) => (
+        <div key={p.id} data-testid={p.id} className='col-12 col-sm-6 col-md-4 col-lg-3'>
+          <ProductItem product={p} />
         </div>
-    );
-}
+      ))
+    : 'LOADING';
+
+  return (
+    <div className={bem()}>
+      <Helmet title='Catalog' />
+      <div className='row'>
+        <div className='col'>
+          <h1>Catalog</h1>
+        </div>
+      </div>
+      <div className='row'>{items}</div>
+    </div>
+  );
+};
