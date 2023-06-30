@@ -116,7 +116,7 @@ describe('Каталог:', async () => {
 
     await browser.assertView('plainProduct', '.ProductDetails-AddToCart', {
       screenshotDelay: 1000,
-      compositeImage: true,
+      compositeImage: false,
     });
   });
 
