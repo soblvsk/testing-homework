@@ -55,7 +55,6 @@ describe('Каталог:', async () => {
       );
 
       const product = response.data;
-      assert.equal(product, product, 'С сервера должен прийти товар');
 
       await browser.url(`http://localhost:3000/hw/store/catalog/${i.toString()}?bug_id=${bug_id}`);
       const item = await browser.$('.Product');
