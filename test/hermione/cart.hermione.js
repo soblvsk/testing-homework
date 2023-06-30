@@ -28,7 +28,7 @@ describe('Корзина:', async () => {
 
     await browser.assertView('plainCart', '.Cart', {
       screenshotDelay: 1000,
-      compositeImage: true,
+      compositeImage: false,
     });
   });
 
