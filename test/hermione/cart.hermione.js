@@ -8,9 +8,9 @@ if (process.env.BUG_ID !== undefined) {
 }
 
 describe('Корзина:', async () => {
-  it('При оформление заказа должно появиться зеленое окно', async ({ browser }) => {
+  it('Проверка при оформлении заказа', async ({ browser }) => {
     browser.setWindowSize(1920, 1080);
-    await browser.url(`http://localhost:3000/hw/store/catalog/0?bug_id=${bug_id}`);
+    await browser.url('http://localhost:3000/hw/store/catalog/0');
 
     const page = await browser.$('.Application');
     await page.waitForExist();
@@ -19,17 +19,27 @@ describe('Корзина:', async () => {
 
     await browser.url(`http://localhost:3000/hw/store/cart?bug_id=${bug_id}`);
 
-    await browser.$('.Form-Field_type_name').setValue('Vitaliy');
-    await browser.$('.Form-Field_type_phone').setValue('79999999999');
-    await browser.$('.Form-Field_type_address').setValue('Address');
+    const cartName = await browser.$('.Form-Field_type_name');
+    const cartPhone = await browser.$('.Form-Field_type_phone');
+    const cartAddress = await browser.$('.Form-Field_type_address');
+
+    await cartName.setValue('Vitaliy');
+    await cartPhone.setValue('79999999999');
+    await cartAddress.setValue('Address');
+
     await browser.$('.Form-Submit').click();
 
-    await browser.$('.Cart').waitForExist();
+    const isNameInvalid = await cartName.getAttribute('class');
+    const isPhoneInvalid = await cartPhone.getAttribute('class');
 
-    await browser.assertView('plainCart', '.Cart', {
-      screenshotDelay: 1000,
-      compositeImage: false,
-    });
+    assert.ok(!isNameInvalid.includes('is-invalid'), 'Ожидается, что Name валидный');
+    assert.ok(!isPhoneInvalid.includes('is-invalid'), 'Ожидается, что Phone валидный');
+
+    const orderCard = await browser.$('.Cart-SuccessMessage');
+    assert.equal(await orderCard.isDisplayed(), true, 'Окно с заказом и номером должно появиться');
+
+    const orderCardIsValid = await orderCard.getAttribute('class');
+    assert.include(orderCardIsValid, 'alert-success', 'Окно с заказом должно иметь зеленый цвет');
   });
 
   it('При оформление заказа должно вернуть правильный id заказа', async () => {
