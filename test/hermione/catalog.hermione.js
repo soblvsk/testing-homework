@@ -121,6 +121,7 @@ describe('Каталог:', async () => {
 
   it('Содержимое корзины должно сохраняться между перезагрузками страницы', async ({ browser }) => {
     await browser.setWindowSize(1920, 1080);
+    browser.execute(() => window.localStorage.removeItem('example-store-cart'));
 
     await browser.url(`http://localhost:3000/hw/store/catalog/0?bug_id=${bug_id}`);
 
@@ -133,9 +134,11 @@ describe('Каталог:', async () => {
     await browser.url(`http://localhost:3000/hw/store/cart?bug_id=${bug_id}`);
 
     const appCartNameBefore = await browser.$('.Cart-Table');
+    assert.equal(await appCartNameBefore.isDisplayed(), true, 'Товар должен сохраниться в корзине');
     browser.refresh();
     const appCartNameAfter = await browser.$('.Cart-Table');
 
+    browser.execute(() => window.localStorage.removeItem('example-store-cart'));
     assert.equal(
       await appCartNameBefore.getText(),
       await appCartNameAfter.getText(),
